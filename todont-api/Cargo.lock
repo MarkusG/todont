@@ -429,14 +429,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shaver-api"
-version = "0.1.0"
-dependencies = [
- "axum",
- "tokio",
-]
-
-[[package]]
 name = "signal-hook-registry"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -477,6 +469,14 @@ name = "sync_wrapper"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20518fe4a4c9acf048008599e464deb21beeae3d3578418951a189c235a7a9a8"
+
+[[package]]
+name = "todont-api"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "tokio",
+]
 
 [[package]]
 name = "tokio"
