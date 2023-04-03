@@ -1,15 +1,18 @@
-use axum::Json;
-use axum::extract::Path;
+use axum::{extract::Path, Extension};
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
 use uuid::Uuid;
 
-use crate::models::Todo;
+use crate::repository::DynTodoRepository;
 
-pub async fn get_todo(Path(id): Path<Uuid>) -> Json<Todo> {
-    axum::Json(Todo {
-        id,
-        created_at: chrono::offset::Utc::now(),
-        completed_at: None,
-        title: "Hello world todo".to_string(),
-        content: "This is a longer string representing details about the todo".to_string()
-    })
+pub async fn get_todo(
+    Path(id): Path<Uuid>,
+    Extension(repo): Extension<DynTodoRepository>) -> impl IntoResponse {
+    let found = repo.get(id).await;
+    if let Some(todo) = found {
+        return (StatusCode::OK, axum::Json(todo)).into_response();
+    }
+    else {
+        return StatusCode::NOT_FOUND.into_response();
+    }
 }

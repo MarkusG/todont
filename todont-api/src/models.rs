@@ -3,6 +3,7 @@ use chrono::{Utc, DateTime};
 use serde::{Serialize, Deserialize};
 
 #[derive(Serialize, Deserialize)]
+#[derive(Clone)]
 pub struct Todo {
     pub id: Uuid,
     pub created_at: DateTime<Utc>,
