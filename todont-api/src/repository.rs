@@ -12,7 +12,7 @@ pub struct VecTodoRepository {
 impl VecTodoRepository {
     pub fn new() -> VecTodoRepository {
         let mut vec = Vec::<Todo>::new();
-        let id = Uuid::new_v4();
+        let mut id = Uuid::new_v4();
         println!("seed uuid is {}", id);
         vec.push(Todo {
             id,
@@ -20,6 +20,15 @@ impl VecTodoRepository {
             completed_at: None,
             title: "Hello world!".to_string(),
             content: "Wheeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee!".to_string()
+        });
+        id = Uuid::new_v4();
+        println!("seed uuid is {}", id);
+        vec.push(Todo {
+            id,
+            created_at: chrono::offset::Utc::now(),
+            completed_at: None,
+            title: "Hello world 2!".to_string(),
+            content: "WHEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE!".to_string()
         });
         VecTodoRepository {
             todos: vec

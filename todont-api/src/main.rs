@@ -4,6 +4,7 @@ use axum::{Router, Extension};
 use axum::{routing::get};
 
 use todont_api::endpoints::todos::get::*;
+use todont_api::endpoints::todos::get_all::*;
 use todont_api::repository::{DynTodoRepository, VecTodoRepository};
 
 #[tokio::main]
@@ -12,6 +13,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/todos/:id", get(get_todo))
+        .route("/todos", get(get_todos))
         .layer(Extension(repo));
 
     // run it with hyper on localhost:3000
