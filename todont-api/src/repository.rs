@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use tokio::sync::Mutex;
 
 use uuid::Uuid;
 use axum::async_trait;
@@ -94,7 +95,7 @@ impl TodoRepository for VecTodoRepository {
     }
 }
 
-pub type DynTodoRepository = Arc<dyn TodoRepository + Send + Sync>;
+pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
 
 #[async_trait]
 pub trait TodoRepository {

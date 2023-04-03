@@ -7,7 +7,8 @@ use crate::repository::DynTodoRepository;
 
 pub async fn get_todo(
     Path(id): Path<Uuid>,
-    Extension(repo): Extension<DynTodoRepository>) -> impl IntoResponse {
+    Extension(repo_mutex): Extension<DynTodoRepository>) -> impl IntoResponse {
+    let repo = repo_mutex.lock().await;
     let found = repo.get(id).await;
     if let Some(todo) = found {
         return (StatusCode::OK, axum::Json(todo)).into_response();

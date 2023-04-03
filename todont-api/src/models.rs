@@ -11,3 +11,21 @@ pub struct Todo {
     pub title: String,
     pub content: String
 }
+
+impl Todo {
+    pub fn new(request: CreateTodoRequest) -> Todo {
+        Todo {
+            id: Uuid::new_v4(),
+            created_at: chrono::offset::Utc::now(),
+            completed_at: None,
+            title: request.title,
+            content: request.content
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct CreateTodoRequest {
+    pub title: String,
+    pub content: String
+}
