@@ -11,7 +11,7 @@ async fn main() {
     let repo = Arc::new(VecTodoRepository::new()) as DynTodoRepository;
 
     let app = Router::new()
-        .route("/:id", get(get_todo))
+        .route("/todos/:id", get(get_todo))
         .layer(Extension(repo));
 
     // run it with hyper on localhost:3000
