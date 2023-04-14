@@ -1,0 +1,60 @@
+body {
+    background-color: #f8f8f8;
+    font-family: sans-serif;
+}
+
+.container {
+    width: 500px;
+    margin: auto;
+    background-color: white;
+    padding: 8px;
+    box-shadow: 0 0 3px gray;
+}
+
+.container h1 {
+    text-align: center;
+    font-weight: normal;
+    text-decoration: underline;
+}
+
+.todos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.todo {
+    padding: 8px;
+    box-shadow: 0 0 2px gray;
+    display: flex;
+    justify-content: space-between;
+}
+
+.todo h2 {
+    font-weight: normal;
+    margin: 0;
+}
+
+.todo p {
+    margin: 0;
+}
+
+.todo-buttons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.check, .x {
+    font-size: 2rem;
+}
+
+.check::after {
+    content: "✓";
+    color: #a1b56c;
+}
+
+.x::after {
+    content: "🞨";
+    color: #ab4642;
+}
