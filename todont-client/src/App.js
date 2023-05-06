@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import './App.css';
 import NavLink from './NavLink.js';
 import Todo from './Todo.js';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 function App() {
+  useEffect(() => {
+      document.title = 'Todont';
+  }, []);
   return (
       <>
       <div className="flex flex-col md:flex-row h-screen w-screen">
