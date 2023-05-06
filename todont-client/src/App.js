@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import NavLink from './NavLink.js';
 import Todo from './Todo.js';
@@ -6,7 +6,14 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 function App() {
   useEffect(() => {
-      document.title = 'Todont';
+    document.title = 'Todont';
+  }, []);
+  const [todos, setTodos] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:3001/todos')
+      .then((response) => response.json())
+      .then((data) => { setTodos(data); })
+      .catch((e) => { console.log(e.message); });
   }, []);
   return (
       <>
@@ -18,9 +25,9 @@ function App() {
         { /* main page container */ }
         <div className="w-full p-4">
           <div className="flex flex-col gap-4">
-            {[0,1,2,3].map((i) => (
-                <div key={i}>
-                    <Todo title={"Todo title " + i} description="This is a rather longer description to the todo. Perhaps it contains some rambling. Really there's no telling how long this will be. Hmmmmmmmmmm."/>
+            {todos.map((t) => (
+                <div key={t.id}>
+                    <Todo title={t.title} description={t.description}/>
                 </div>
             ))}
           </div>
