@@ -5,6 +5,7 @@ use axum::{Router, Extension};
 use axum::routing::{post, get, put, delete};
 
 use tower_http::cors::CorsLayer;
+use tower_http::cors::Any;
 use tower::ServiceBuilder;
 
 use todont_api::endpoints::todos::create::*;
@@ -24,6 +25,7 @@ async fn main() {
     ];
 
     let cors = CorsLayer::new()
+        .allow_methods(Any)
         .allow_origin(origins);
 
     let app = Router::new()
