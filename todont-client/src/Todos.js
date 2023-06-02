@@ -21,7 +21,11 @@ export default function Todos() {
         });
     }, []);
 
-    function done(id) {
+    function done(todo) {
+        setTodos(todos.map(t => { return t.id === todo.id ? todo : t}));
+    };
+
+    function deleted(id) {
         setTodos(todos.filter(t => { return t.id !== id }));
     };
 
@@ -34,7 +38,8 @@ export default function Todos() {
           {todos.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
               <Todo todo={t}
-                onDone={done}/>
+                onDone={done}
+                onDelete={deleted}/>
               </div>
           ))}
         </div>
@@ -42,7 +47,7 @@ export default function Todos() {
           {todos.filter(t => { return t.completed_at !== null}).map((t) => (
               <div key={t.id}>
               <Todo todo={t}
-                onDone={done}/>
+                onDelete={deleted}/>
               </div>
           ))}
         </>
