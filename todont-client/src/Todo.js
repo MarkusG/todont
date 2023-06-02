@@ -24,7 +24,9 @@ export default function Todo({ todo, onDone }) {
           <p>{todo.description}</p>
         </div>
         <div className="ml-2 my-auto flex gap-2">
+        {todo.completed_at === null &&
           <span className="cursor-pointer check" onClick={done}></span>
+        }
           <span className="cursor-pointer x"></span>
         </div>
       </div>

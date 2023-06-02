@@ -29,13 +29,22 @@ export default function Todos() {
         return (<p>{error}</p>);
 
     return (
+        <>
         <div className="flex flex-col gap-4">
-          {todos.map((t) => (
+          {todos.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
               <Todo todo={t}
                 onDone={done}/>
               </div>
           ))}
         </div>
+        <h3 className="text-3xl my-4 text-center">Completed Todos</h3>
+          {todos.filter(t => { return t.completed_at !== null}).map((t) => (
+              <div key={t.id}>
+              <Todo todo={t}
+                onDone={done}/>
+              </div>
+          ))}
+        </>
     );
 }
