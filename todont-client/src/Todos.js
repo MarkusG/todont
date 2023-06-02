@@ -32,6 +32,8 @@ export default function Todos() {
     if (error != null)
         return (<p>{error}</p>);
 
+    const doneTodos = todos.filter(t => { return t.completed_at !== null});
+
     return (
         <>
         <div className="flex flex-col gap-4">
@@ -43,13 +45,15 @@ export default function Todos() {
               </div>
           ))}
         </div>
-        <h3 className="text-3xl my-4 text-center">Completed Todos</h3>
-          {todos.filter(t => { return t.completed_at !== null}).map((t) => (
-              <div key={t.id}>
-              <Todo todo={t}
-                onDelete={deleted}/>
-              </div>
-          ))}
+        {doneTodos.length > 0 &&
+            <h3 className="text-3xl my-4 text-center">Completed Todos</h3>
+        }
+            {doneTodos.map((t) => (
+                <div key={t.id}>
+                <Todo todo={t}
+                  onDelete={deleted}/>
+                </div>
+            ))}
         </>
     );
 }
