@@ -21,6 +21,10 @@ export default function Todos() {
         });
     }, []);
 
+    function done(id) {
+        setTodos(todos.filter(t => { return t.id !== id }));
+    };
+
     if (error != null)
         return (<p>{error}</p>);
 
@@ -28,7 +32,8 @@ export default function Todos() {
         <div className="flex flex-col gap-4">
           {todos.map((t) => (
               <div key={t.id}>
-              <Todo title={t.title} description={t.description}/>
+              <Todo todo={t}
+                onDone={done}/>
               </div>
           ))}
         </div>
