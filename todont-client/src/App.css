@@ -20,3 +20,7 @@ body {
     content: "🞨";
     color: #ab4642;
 }
+
+.plus::after {
+    content: "+";
+}
