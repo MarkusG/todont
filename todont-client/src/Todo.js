@@ -31,7 +31,7 @@ export default function Todo({ todo, onDone, onDelete }) {
     };
 
     return (
-      <div className="p-4 flex justify-between border shadow-md">
+      <div className="p-4 flex justify-between border shadow-md bg-[#f8f8f8]">
         <div>
           <h2 className="text-xl">{todo.title}</h2>
           <p>{todo.description}</p>
