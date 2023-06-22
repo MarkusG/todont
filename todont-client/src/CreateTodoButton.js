@@ -1,22 +1,12 @@
-import { useState } from 'react';
-
-import Modal from './Modal.js';
+import { Link } from 'react-router-dom';
 
 export default function CreateTodoButton() {
-    const [isOpen, setIsOpen] = useState(false);
-
     return (
-        <>
-        <button className="text-xl p-2 rounded bg-primary-500 text-white"
-            onClick={() => { setIsOpen(true); }}>
-            <span className="mr-2 plus"></span>
-            Create Todo
-        </button>
-        <Modal
-            isOpen={isOpen}
-            onRequestClose={() => { setIsOpen(false) }}>
-            <div>Hello world!</div>
-        </Modal>
-        </>
+        <Link to={'/todos/create'}>
+            <button className="text-xl p-2 rounded bg-primary-500 text-white">
+                <span className="mr-2 plus"></span>
+                Create Todo
+            </button>
+        </Link>
     )
 }
