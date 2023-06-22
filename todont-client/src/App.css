@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 body {
-    background-color: #eee;
     font-family: sans-serif;
 }
 
@@ -13,12 +12,10 @@ body {
 
 .check::after {
     content: "✓";
-    color: #a1b56c;
 }
 
 .x::after {
     content: "🞨";
-    color: #ab4642;
 }
 
 .plus::after {

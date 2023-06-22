@@ -31,16 +31,16 @@ export default function Todo({ todo, onDone, onDelete }) {
     };
 
     return (
-      <div className="p-4 flex justify-between border shadow-md bg-[#f8f8f8]">
+      <div className="p-4 flex justify-between border shadow-md bg-gray-50">
         <div>
           <h2 className="text-xl">{todo.title}</h2>
           <p>{todo.description}</p>
         </div>
         <div className="ml-2 my-auto flex gap-2">
         {todo.completed_at === null &&
-          <span className="cursor-pointer check" onClick={done}></span>
+          <span className="cursor-pointer check text-success-500" onClick={done}></span>
         }
-          <span className="cursor-pointer x" onClick={delete_todo}></span>
+          <span className="cursor-pointer x text-danger-500" onClick={delete_todo}></span>
         </div>
       </div>
     )
