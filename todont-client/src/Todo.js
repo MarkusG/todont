@@ -33,8 +33,8 @@ export default function Todo({ todo, onDone, onDelete }) {
     return (
       <div className="p-4 flex justify-between border shadow-md bg-gray-50">
         <div>
-          <h2 className="text-xl">{todo.title}</h2>
-          <p>{todo.description}</p>
+          <h2 className="text-2xl">{todo.title}</h2>
+          <p>{todo.content}</p>
         </div>
         <div className="ml-2 my-auto flex gap-2">
         {todo.completed_at === null &&
