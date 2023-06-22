@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import './App.css';
 import Sidebar from './Sidebar.js';
 import CreateTodoButton from './CreateTodoButton.js';
@@ -8,6 +9,7 @@ function App() {
     useEffect(() => {
         document.title = 'Todont';
     }, []);
+
     return (
         <div className="flex flex-col md:flex-row h-screen w-screen bg-gray-100">
           <Sidebar/>
