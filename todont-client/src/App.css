@@ -6,10 +6,6 @@ body {
     font-family: sans-serif;
 }
 
-.check, .x {
-    font-size: 2rem;
-}
-
 .check::after {
     content: "✓";
 }

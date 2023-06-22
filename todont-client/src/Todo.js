@@ -38,9 +38,9 @@ export default function Todo({ todo, onDone, onDelete }) {
         </div>
         <div className="ml-2 my-auto flex gap-2">
         {todo.completed_at === null &&
-          <span className="cursor-pointer check text-success-500" onClick={done}></span>
+          <span className="cursor-pointer check text-3xl text-success-500" onClick={done}></span>
         }
-          <span className="cursor-pointer x text-danger-500" onClick={delete_todo}></span>
+          <span className="cursor-pointer x text-3xl text-danger-500" onClick={delete_todo}></span>
         </div>
       </div>
     )

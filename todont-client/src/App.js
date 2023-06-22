@@ -9,7 +9,6 @@ function App() {
         document.title = 'Todont';
     }, []);
     return (
-        <>
         <div className="flex flex-col md:flex-row h-screen w-screen bg-gray-100">
           <Sidebar/>
           { /* main page container */ }
@@ -20,7 +19,6 @@ function App() {
             <Todos/>
           </div>
         </div>
-        </>
     );
 }
 
