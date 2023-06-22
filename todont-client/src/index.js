@@ -2,12 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App';
+import Root from './Root.js';
+import Todos from './Todos.js';
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App/>
+        element: <Root/>,
+        children: [
+            {
+                path: 'todos',
+                element: <Todos/>
+            }
+        ]
     }
 ]);
 

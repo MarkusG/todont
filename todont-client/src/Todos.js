@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import Todo from './Todo.js';
+import CreateTodoButton from './CreateTodoButton.js';
 
 export default function Todos() {
     const [todos, setTodos] = useState([]);
@@ -36,6 +37,9 @@ export default function Todos() {
 
     return (
         <>
+        <div className="mb-4">
+            <CreateTodoButton/>
+        </div>
         <div className="flex flex-col gap-4">
           {todos.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
