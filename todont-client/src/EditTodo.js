@@ -6,8 +6,7 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 export default function CreateTodo() {
     const { id } = useParams();
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const [todo, setTodo] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -16,7 +15,7 @@ export default function CreateTodo() {
             if (response.ok)
                 return response.json();
         })
-        .then((todo) => { setTitle(todo.title); setContent(todo.content); })
+        .then((todo) => { setTodo(todo); })
         .catch((e) => {
             console.log(e.message);
         });
@@ -29,7 +28,7 @@ export default function CreateTodo() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ title, content })
+            body: JSON.stringify(todo)
         }).then((response) => {
             if (response.ok)
                 navigate('/todos');
@@ -37,6 +36,9 @@ export default function CreateTodo() {
             console.log(e.message);
         });
     }
+
+    if (todo === null)
+        return; // TODO loading icon
 
     return (
         <div className="w-full h-full p-4 bg-gray-50 border shadow-md">
@@ -58,8 +60,8 @@ export default function CreateTodo() {
                         id="title"
                         name="title"
                         className="block w-full p-1 bg-white border rounded"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}/>
+                        value={todo.title}
+                        onChange={e => setTodo({ ...todo, title: e.target.value })}/>
                 </div>
                 <div className="mb-2">
                     <label for="content" className="text-lg">Content:</label>
@@ -67,8 +69,8 @@ export default function CreateTodo() {
                         id="content"
                         name="content"
                         className="block w-full h-[8em] p-1 bg-white border rounded"
-                        value={content}
-                        onChange={e => setContent(e.target.value)}/>
+                        value={todo.content}
+                        onChange={e => setTodo({ ...todo, content: e.target.value })}/>
                 </div>
             </div>
         </div>
