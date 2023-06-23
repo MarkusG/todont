@@ -40,7 +40,7 @@ export default function Todos() {
         <div className="mb-4">
             <CreateTodoButton/>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className={`flex flex-col gap-4${doneTodos.length > 0 ? 'mb-4' : ''}`}>
           {todos.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
               <Todo todo={t}
@@ -50,7 +50,7 @@ export default function Todos() {
           ))}
         </div>
         {doneTodos.length > 0 &&
-            <h3 className="text-3xl my-4 text-center">Completed Todos</h3>
+            <h3 className="text-3xl mb-4 text-center">Completed Todos</h3>
         }
             {doneTodos.map((t) => (
                 <div key={t.id}>
