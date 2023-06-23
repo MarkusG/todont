@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Root from './Root.js';
 import Todos from './Todos.js';
 import CreateTodo from './CreateTodo.js';
+import EditTodo from './EditTodo.js';
 
 const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
             {
                 path: 'todos/create',
                 element: <CreateTodo/>
+            },
+            {
+                path: 'todos/:id',
+                element: <EditTodo/>
             }
         ]
     }
