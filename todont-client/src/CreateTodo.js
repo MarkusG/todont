@@ -50,7 +50,7 @@ export default function CreateTodo() {
                         Back
                     </button>
                 </Link>
-                <button className="block p-2 bg-primary-500 text-white rounded"
+                <button className="block p-2 bg-primary-500 disabled:bg-primary-300 text-white rounded"
                     disabled={title.errors.length !== 0 || content.errors.length !== 0}
                     onClick={submit}>
                     Create
