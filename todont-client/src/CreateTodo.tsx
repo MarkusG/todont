@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
-import InputText from './Forms/InputText.js';
-import InputTextArea from './Forms/InputTextArea.js';
+import InputText from './Forms/InputText.tsx';
+import InputTextArea from './Forms/InputTextArea.tsx';
 
 export default function CreateTodo() {
     const [title, setTitle] = useState({ value: "", errors: [] });

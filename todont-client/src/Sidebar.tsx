@@ -1,4 +1,4 @@
-import NavLink from './NavLink.js';
+import NavLink from './NavLink.tsx';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function Sidebar() {

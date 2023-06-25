@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import './Styles.css';
-import Sidebar from './Sidebar.js';
+import Sidebar from './Sidebar.tsx';
 
 function App() {
     const navigate = useNavigate();

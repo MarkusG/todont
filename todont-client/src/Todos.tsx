@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import Todo from './Todo.js';
-import CreateTodoButton from './CreateTodoButton.js';
+import Todo from './Todo.tsx';
+import CreateTodoButton from './CreateTodoButton.tsx';
 
 export default function Todos() {
     const [todos, setTodos] = useState([]);

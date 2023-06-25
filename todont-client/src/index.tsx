@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Root from './Root.js';
-import Todos from './Todos.js';
-import CreateTodo from './CreateTodo.js';
-import EditTodo from './EditTodo.js';
+import Root from './Root.tsx';
+import Todos from './Todos.tsx';
+import CreateTodo from './CreateTodo.tsx';
+import EditTodo from './EditTodo.tsx';
 
 const router = createBrowserRouter([
     {
