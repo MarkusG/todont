@@ -1,4 +1,12 @@
-export default function InputTextArea(props) {
+interface InputTextAreaProps {
+    id: string;
+    name: string;
+    className: string;
+    value: string;
+    onChange: (value: string) => void;
+    errors: string[];
+}
+export default function InputTextArea(props: InputTextAreaProps) {
     function borderClass() {
         if (props.value)
             return props.errors.length === 0 ? 'border-success-500' : 'border-danger-500';

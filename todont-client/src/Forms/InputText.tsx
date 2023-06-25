@@ -1,4 +1,13 @@
-export default function InputText(props) {
+interface InputTextProps {
+    id: string;
+    name: string;
+    className: string;
+    value: string;
+    onChange: (value: string) => void;
+    errors: string[];
+}
+
+export default function InputText(props: InputTextProps) {
     function borderClass() {
         if (props.value)
             return props.errors.length === 0 ? 'border-success-500' : 'border-danger-500';

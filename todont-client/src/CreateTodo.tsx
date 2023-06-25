@@ -7,9 +7,14 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import InputText from './Forms/InputText.tsx';
 import InputTextArea from './Forms/InputTextArea.tsx';
 
+interface ValidationState<T> {
+    value: T;
+    errors: string[]
+}
+
 export default function CreateTodo() {
-    const [title, setTitle] = useState({ value: "", errors: [] });
-    const [content, setContent] = useState({ value: "", errors: [] });
+    const [title, setTitle] = useState<ValidationState<string>>({ value: "", errors: [] });
+    const [content, setContent] = useState<ValidationState<string>>({ value: "", errors: [] });
     const navigate = useNavigate();
 
     function submit() {
@@ -27,18 +32,18 @@ export default function CreateTodo() {
         });
     }
 
-    function updateTitle(title) {
-        let newTitle = { value: title, errors: [] };
+    function updateTitle(title: string) {
+        let errors: string[] = [];
         if (title.length > 50)
-            newTitle.errors.push('Title must be 50 characters or less');
-        setTitle(newTitle)
+            errors.push('Title must be 50 characters or less');
+        setTitle({ value: title, errors: errors });
     }
 
-    function updateContent(content) {
-        let newContent = { value: content, errors: [] };
+    function updateContent(content: string) {
+        let errors: string[] = [];
         if (content.length > 1000)
-            newContent.errors.push('Content must be 1000 characters or less');
-        setContent(newContent)
+            errors.push('Content must be 1000 characters or less');
+        setContent({ value: content, errors: errors });
     }
 
     return (

@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
+import Todo from './Todo.ts';
+
 export default function CreateTodo() {
     const { id } = useParams();
-    const [todo, setTodo] = useState(null);
+    const [todo, setTodo] = useState<Todo | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,7 +47,7 @@ export default function CreateTodo() {
             <div className="flex justify-between mb-2">
                 <Link to={'/todos'} draggable="false">
                     <button className="block p-2 text-gray-500">
-                        <FontAwesomeIcon icon={solid('arrow-left')} size="md" className="mr-2"/>
+                        <FontAwesomeIcon icon={solid('arrow-left')} className="mr-2"/>
                         Back
                     </button>
                 </Link>
@@ -55,7 +57,7 @@ export default function CreateTodo() {
             </div>
             <div className="m-auto min-w-fit max-w-[500px]">
                 <div className="mb-2">
-                    <label for="title" className="text-lg">Title:</label>
+                    <label htmlFor="title" className="text-lg">Title:</label>
                     <input
                         id="title"
                         name="title"
@@ -64,7 +66,7 @@ export default function CreateTodo() {
                         onChange={e => setTodo({ ...todo, title: e.target.value })}/>
                 </div>
                 <div className="mb-2">
-                    <label for="content" className="text-lg">Content:</label>
+                    <label htmlFor="content" className="text-lg">Content:</label>
                     <textarea
                         id="content"
                         name="content"

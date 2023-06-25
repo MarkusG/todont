@@ -3,8 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
-export default function Todo({ todo, onDone, onDelete }) {
+import Todo from './Todo.ts';
+
+export interface TodoProps {
+    todo: Todo;
+    onDone?: (todo: Todo) => void;
+    onDelete: (id: string) => void;
+}
+
+const TodoDisplay = (props: TodoProps) => {
     const navigate = useNavigate();
+    const { todo, onDone, onDelete } = props;
 
     function done() {
         todo.completed_at = new Date();
@@ -16,7 +25,7 @@ export default function Todo({ todo, onDone, onDelete }) {
             body: JSON.stringify(todo)
         })
             .then((response) => {
-                if (response.ok)
+                if (response.ok && onDone)
                     onDone(todo);
             })
             .catch((e) => {
@@ -63,3 +72,5 @@ export default function Todo({ todo, onDone, onDelete }) {
       </div>
     )
 }
+
+export default TodoDisplay;

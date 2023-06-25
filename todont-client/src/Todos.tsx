@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import Todo from './Todo.tsx';
+import TodoDisplay from './TodoDisplay.tsx';
 import CreateTodoButton from './CreateTodoButton.tsx';
 
+import Todo from './Todo.ts';
+
 export default function Todos() {
-    const [todos, setTodos] = useState([]);
-    const [error, setError] = useState(null);
+    const [todos, setTodos] = useState<Todo[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
       fetch('http://localhost:3001/todos')
@@ -22,11 +24,11 @@ export default function Todos() {
         });
     }, []);
 
-    function done(todo) {
+    function done(todo: Todo) {
         setTodos(todos.map(t => { return t.id === todo.id ? todo : t}));
     };
 
-    function deleted(id) {
+    function deleted(id: string) {
         setTodos(todos.filter(t => { return t.id !== id }));
     };
 
@@ -43,7 +45,8 @@ export default function Todos() {
         <div className={`flex flex-col gap-4${doneTodos.length > 0 ? 'mb-4' : ''}`}>
           {todos.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
-              <Todo todo={t}
+              <TodoDisplay
+                todo={t}
                 onDone={done}
                 onDelete={deleted}/>
               </div>
@@ -54,7 +57,8 @@ export default function Todos() {
         }
             {doneTodos.map((t) => (
                 <div key={t.id}>
-                <Todo todo={t}
+                <TodoDisplay
+                  todo={t}
                   onDelete={deleted}/>
                 </div>
             ))}
