@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-interface NavLinkProps {
+export interface NavLinkProps {
     name: string;
     icon: any;
 }

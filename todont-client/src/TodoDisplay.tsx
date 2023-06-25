@@ -5,13 +5,13 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 
 import Todo from './Todo.ts';
 
-export interface TodoProps {
+export interface TodoDisplayProps {
     todo: Todo;
     onDone?: (todo: Todo) => void;
     onDelete: (id: string) => void;
 }
 
-const TodoDisplay = (props: TodoProps) => {
+const TodoDisplay = (props: TodoDisplayProps) => {
     const navigate = useNavigate();
     const { todo, onDone, onDelete } = props;
 
