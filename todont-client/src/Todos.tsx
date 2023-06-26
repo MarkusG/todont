@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 import TodoDisplay from './TodoDisplay.tsx';
 import CreateTodoButton from './CreateTodoButton.tsx';
@@ -6,36 +6,48 @@ import CreateTodoButton from './CreateTodoButton.tsx';
 import Todo from './Todo.ts';
 
 export default function Todos() {
-    const [todos, setTodos] = useState<Todo[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-      fetch('http://localhost:3001/todos')
-        .then((response) => {
-            if (response.ok)
-                return response.json();
-            setError(`An error occured when fetching todos
-                (${response.statusText})`);
-        })
-        .then((data) => { setTodos(data); })
-        .catch((e) => {
-            console.log(e.message);
-            setError(`An error occurred when fetching todos (${e.message})`);
-        });
-    }, []);
+    const { isLoading, error, data } = useQuery<Todo[], Error>({
+        queryKey: ['todos'],
+        queryFn: () =>
+            fetch('http://localhost:3001/todos')
+            .then((res) => res.json()),
+        initialData: []
+    });
 
-    function done(todo: Todo) {
-        setTodos(todos.map(t => { return t.id === todo.id ? todo : t}));
-    };
+    const doneMutation = useMutation({
+        mutationFn: async (todo: Todo) => {
+            todo.completed_at = new Date();
+            await fetch(`http://localhost:3001/todos/${todo.id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({...todo, completed_at: new Date() })
+            }).then((res) => res.json())
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+    });
 
-    function deleted(id: string) {
-        setTodos(todos.filter(t => { return t.id !== id }));
-    };
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => { 
+            await fetch(`http://localhost:3001/todos/${id}`, {
+                method: "DELETE",
+            })
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
+        },
+    });
 
-    if (error != null)
-        return (<p>{error}</p>);
+    if (isLoading) return 'Loading...';
 
-    const doneTodos = todos.filter(t => { return t.completed_at !== null});
+    if (error) return 'An error has occurred: ' + error.message;
+
+    const doneTodos = data.filter(t => { return t.completed_at !== null});
 
     return (
         <>
@@ -43,12 +55,12 @@ export default function Todos() {
             <CreateTodoButton/>
         </div>
         <div className={`flex flex-col gap-4${doneTodos.length > 0 ? 'mb-4' : ''}`}>
-          {todos.filter(t => { return t.completed_at === null}).map((t) => (
+          {data.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
               <TodoDisplay
                 todo={t}
-                onDone={done}
-                onDelete={deleted}/>
+                onDone={(todo) => { doneMutation.mutate(todo) }}
+                onDelete={(id) => { deleteMutation.mutate(id) }}/>
               </div>
           ))}
         </div>
@@ -59,7 +71,7 @@ export default function Todos() {
                 <div key={t.id}>
                 <TodoDisplay
                   todo={t}
-                  onDelete={deleted}/>
+                  onDelete={(id) => { deleteMutation.mutate(id) }}/>
                 </div>
             ))}
         </>

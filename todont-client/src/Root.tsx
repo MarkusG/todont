@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import './Styles.css';
 import Sidebar from './Sidebar.tsx';
 
-function App() {
+function Root() {
     const navigate = useNavigate();
     useEffect(() => {
         document.title = 'Todont';
@@ -22,4 +22,4 @@ function App() {
     );
 }
 
-export default App;
+export default Root;

@@ -13,21 +13,8 @@ const TodoDisplay = (props: TodoDisplayProps) => {
     const { todo, onDone, onDelete } = props;
 
     function done() {
-        todo.completed_at = new Date();
-        fetch(`http://localhost:3001/todos/${todo.id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(todo)
-        })
-            .then((response) => {
-                if (response.ok && onDone)
-                    onDone(todo);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
+        if (onDone)
+            onDone(todo);
     }
 
     function edit() {
@@ -35,16 +22,8 @@ const TodoDisplay = (props: TodoDisplayProps) => {
     }
 
     function delete_todo() {
-        fetch(`http://localhost:3001/todos/${todo.id}`, {
-            method: "DELETE",
-        })
-            .then((response) => {
-                if (response.ok)
-                    onDelete(todo.id);
-            })
-            .catch((e) => {
-                console.log(e.message);
-            });
+        if (onDelete)
+            onDelete(todo.id);
     }
 
     return (
