@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Root from './Root.tsx';
+import Root from './Root.tsx'
 import Todos from './Todos.tsx';
 import CreateTodo from './CreateTodo.tsx';
 import EditTodo from './EditTodo.tsx';

@@ -1,9 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-
 import InputText from './Forms/InputText.tsx';
 import InputTextArea from './Forms/InputTextArea.tsx';
 
@@ -33,14 +30,14 @@ export default function CreateTodo() {
     }
 
     function updateTitle(title: string) {
-        let errors: string[] = [];
+        const errors: string[] = [];
         if (title.length > 50)
             errors.push('Title must be 50 characters or less');
         setTitle({ value: title, errors: errors });
     }
 
     function updateContent(content: string) {
-        let errors: string[] = [];
+        const errors: string[] = [];
         if (content.length > 1000)
             errors.push('Content must be 1000 characters or less');
         setContent({ value: content, errors: errors });
@@ -51,7 +48,7 @@ export default function CreateTodo() {
             <div className="flex justify-between mb-2">
                 <Link to={'/todos'} draggable="false">
                     <button className="block p-2 text-gray-500">
-                        <FontAwesomeIcon icon={solid('arrow-left')} className="mr-2"/>
+                        <i className="fa-solid fa-arrow-left mr-2"></i>
                         Back
                     </button>
                 </Link>

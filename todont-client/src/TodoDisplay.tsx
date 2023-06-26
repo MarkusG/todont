@@ -1,8 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-
 import Todo from './Todo.ts';
 
 export interface TodoDisplayProps {
@@ -31,7 +28,7 @@ const TodoDisplay = (props: TodoDisplayProps) => {
             .catch((e) => {
                 console.log(e.message);
             });
-    };
+    }
 
     function edit() {
         navigate(`/todos/${todo.id}`);
@@ -48,7 +45,7 @@ const TodoDisplay = (props: TodoDisplayProps) => {
             .catch((e) => {
                 console.log(e.message);
             });
-    };
+    }
 
     return (
       <div className="p-4 flex justify-between border shadow-md bg-gray-50">
@@ -59,14 +56,14 @@ const TodoDisplay = (props: TodoDisplayProps) => {
         <div className="ml-2 my-auto flex gap-4">
         {todo.completed_at === null &&
           <button className="text-success-500" onClick={done}>
-            <FontAwesomeIcon icon={solid('check')} size="lg"/>
+            <i className="fa-solid fa-lg fa-check"></i>
           </button>
         }
           <button className="text-gray-500" onClick={edit}>
-            <FontAwesomeIcon icon={solid('pencil')} size="lg"/>
+            <i className="fa-solid fa-lg fa-pencil"></i>
           </button>
           <button className="text-danger-500" onClick={delete_todo}>
-            <FontAwesomeIcon icon={solid('x')} size="lg"/>
+            <i className="fa-solid fa-lg fa-x"></i>
           </button>
         </div>
       </div>

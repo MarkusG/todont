@@ -1,9 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-
 import Todo from './Todo.ts';
 
 export default function CreateTodo() {
@@ -47,7 +44,7 @@ export default function CreateTodo() {
             <div className="flex justify-between mb-2">
                 <Link to={'/todos'} draggable="false">
                     <button className="block p-2 text-gray-500">
-                        <FontAwesomeIcon icon={solid('arrow-left')} className="mr-2"/>
+                        <i className="fa-solid fa-arrow-left mr-2"></i>
                         Back
                     </button>
                 </Link>

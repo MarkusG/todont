@@ -5,7 +5,7 @@ use tower_http::services::ServeDir;
 async fn main() {
 
     let app = Router::new()
-        .nest_service("/", ServeDir::new("build"));
+        .nest_service("/", ServeDir::new("dist"));
 
     // run it with hyper on localhost:3000
     axum::Server::bind(&"[::]:3000".parse().unwrap())
