@@ -3,8 +3,24 @@ use tokio::sync::Mutex;
 
 use uuid::Uuid;
 use axum::async_trait;
+use diesel::pg::PgConnection;
+use diesel::prelude::*;
+use dotenvy::dotenv;
+use std::env;
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
 use crate::models::Todo;
+
+pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
+
+#[async_trait]
+pub trait TodoRepository {
+    async fn create(&mut self, todo: &Todo) -> Option<Todo>;
+    async fn get(&self, id: Uuid) -> Option<Todo>;
+    async fn get_all(&self) -> &[Todo];
+    async fn update(&mut self, todo: &Todo) -> Option<Todo>;
+    async fn delete(&mut self, id: Uuid) -> bool;
+}
 
 pub struct VecTodoRepository {
     todos: Vec<Todo>
@@ -76,13 +92,20 @@ impl TodoRepository for VecTodoRepository {
     }
 }
 
-pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
+pub struct PgTodoRepository {
+    
+}
 
-#[async_trait]
-pub trait TodoRepository {
-    async fn create(&mut self, todo: &Todo) -> Option<Todo>;
-    async fn get(&self, id: Uuid) -> Option<Todo>;
-    async fn get_all(&self) -> &[Todo];
-    async fn update(&mut self, todo: &Todo) -> Option<Todo>;
-    async fn delete(&mut self, id: Uuid) -> bool;
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
+
+impl PgTodoRepository {
+    pub fn new() -> PgTodoRepository {
+        dotenv().ok();
+        let db_url = env::var("DATABASE_URL").expect("DATABASE_URL not set");
+        let mut connection = PgConnection::establish(&db_url)
+            .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
+        connection.run_pending_migrations(MIGRATIONS)
+            .unwrap_or_else(|_| panic!("Error running migrations"));
+        PgTodoRepository { }
+    }
 }
