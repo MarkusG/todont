@@ -4,7 +4,7 @@ diesel::table! {
     todos (id) {
         id -> Uuid,
         title -> Text,
-        content -> Nullable<Text>,
+        content -> Text,
         created_at -> Timestamp,
         completed_at -> Nullable<Timestamp>,
     }

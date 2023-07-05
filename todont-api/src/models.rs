@@ -1,22 +1,24 @@
 use uuid::Uuid;
-use chrono::{Utc, DateTime};
+use chrono::NaiveDateTime;
 use serde::{Serialize, Deserialize};
+use diesel::{Queryable, Selectable};
 
-#[derive(Serialize, Deserialize)]
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize, Queryable, Selectable)]
+#[diesel(table_name = crate::schema::todos)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Todo {
     pub id: Uuid,
-    pub created_at: DateTime<Utc>,
-    pub completed_at: Option<DateTime<Utc>>,
     pub title: String,
-    pub content: String
+    pub content: String,
+    pub created_at: NaiveDateTime,
+    pub completed_at: Option<NaiveDateTime>
 }
 
 impl Todo {
     pub fn from_create(request: CreateTodoRequest) -> Todo {
         Todo {
             id: Uuid::new_v4(),
-            created_at: chrono::offset::Utc::now(),
+            created_at: chrono::Utc::now().naive_utc(),
             completed_at: None,
             title: request.title,
             content: request.content
@@ -26,7 +28,7 @@ impl Todo {
     pub fn from_update(request: UpdateTodoRequest, id: Uuid) -> Todo {
         Todo {
             id,
-            created_at: chrono::offset::Utc::now(),
+            created_at: chrono::Utc::now().naive_utc(),
             completed_at: request.completed_at,
             title: request.title,
             content: request.content
@@ -44,5 +46,5 @@ pub struct CreateTodoRequest {
 pub struct UpdateTodoRequest {
     pub title: String,
     pub content: String,
-    pub completed_at: Option<DateTime<Utc>>
+    pub completed_at: Option<NaiveDateTime>
 }
