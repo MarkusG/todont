@@ -13,16 +13,17 @@ use todont_api::endpoints::todos::get::*;
 use todont_api::endpoints::todos::get_all::*;
 use todont_api::endpoints::todos::update::*;
 use todont_api::endpoints::todos::delete::*;
-use todont_api::repository::{DynTodoRepository, VecTodoRepository};
+use todont_api::repository::{DynTodoRepository, PgTodoRepository};
 
 #[tokio::main]
 async fn main() {
-    let repo = Arc::new(Mutex::new(VecTodoRepository::new())) as DynTodoRepository;
+    let repo = Arc::new(Mutex::new(PgTodoRepository::new())) as DynTodoRepository;
 
     let origins = [
         "http://localhost:3000".parse().unwrap(),
         "https://localhost:3001".parse().unwrap(),
     ];
+
 
     let cors = CorsLayer::new()
         .allow_methods(Any)

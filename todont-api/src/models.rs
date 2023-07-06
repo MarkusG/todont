@@ -1,9 +1,9 @@
 use uuid::Uuid;
 use chrono::NaiveDateTime;
 use serde::{Serialize, Deserialize};
-use diesel::{Queryable, Selectable};
+use diesel::{Queryable, Selectable, Insertable, AsChangeset};
 
-#[derive(Clone, Serialize, Deserialize, Queryable, Selectable)]
+#[derive(Clone, Serialize, Deserialize, Queryable, Selectable, Insertable, AsChangeset)]
 #[diesel(table_name = crate::schema::todos)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Todo {
