@@ -12,7 +12,7 @@ pub async fn create_todo(
     let todo = Todo::from_create(body);
     let mut repo = repo_mutex.lock().await;
     if let Some(created) = repo.create(&todo).await {
-        return (StatusCode::OK, axum::Json(created)).into_response();
+        return (StatusCode::OK, axum::Json(created.into_response())).into_response();
     }
     else {
         return StatusCode::BAD_REQUEST.into_response();

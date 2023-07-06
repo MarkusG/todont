@@ -16,7 +16,7 @@ pub async fn update_todo(
     let mut repo = repo_mutex.lock().await;
     // TODO handle more cases, like validation or not found
     if let Some(updated) = repo.update(&todo).await {
-        return (StatusCode::OK, axum::Json(updated)).into_response();
+        return (StatusCode::OK, axum::Json(updated.into_response())).into_response();
     }
     else {
         return StatusCode::BAD_REQUEST.into_response();
