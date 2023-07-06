@@ -6,5 +6,10 @@ use crate::repository::DynTodoRepository;
 pub async fn get_todos(
     Extension(repo_mutex): Extension<DynTodoRepository>) -> impl IntoResponse {
     let repo = repo_mutex.lock().await;
-    axum::Json(repo.get_all().await.to_vec().iter().map(|t| t.into_response()).collect::<Vec<_>>())
+    axum::Json(
+        repo.get_all().await
+            .to_vec()
+            .into_iter()
+            .map(|t| t.into_response()).collect::<Vec<_>>()
+    )
 }

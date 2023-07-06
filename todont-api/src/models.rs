@@ -36,11 +36,11 @@ impl Todo {
         }
     }
 
-    pub fn into_response(&self) -> TodoResponse {
+    pub fn into_response(self) -> TodoResponse {
         TodoResponse {
             id: self.id,
-            title: self.title.clone(),
-            content: self.content.clone(),
+            title: self.title,
+            content: self.content,
             created_at: DateTime::<Utc>::from_utc(self.created_at, Utc),
             completed_at: if let Some(ts) = self.completed_at {
                 Some(DateTime::<Utc>::from_utc(ts, Utc))
