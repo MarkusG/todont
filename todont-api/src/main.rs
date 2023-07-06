@@ -13,6 +13,7 @@ use todont_api::endpoints::todos::get::*;
 use todont_api::endpoints::todos::get_all::*;
 use todont_api::endpoints::todos::update::*;
 use todont_api::endpoints::todos::delete::*;
+use todont_api::endpoints::auth::authenticate::*;
 use todont_api::repository::{DynTodoRepository, PgTodoRepository};
 
 #[tokio::main]
@@ -23,7 +24,6 @@ async fn main() {
         "http://localhost:3000".parse().unwrap(),
         "https://localhost:3001".parse().unwrap(),
     ];
-
 
     let cors = CorsLayer::new()
         .allow_methods(Any)
@@ -36,6 +36,8 @@ async fn main() {
         .route("/todos", get(get_todos))
         .route("/todos/:id", put(update_todo))
         .route("/todos/:id", delete(delete_todo))
+        .route("/authenticate", post(authenticate))
+        .route("/authorized", get(authorized))
         .layer(
             ServiceBuilder::new()
             .layer(cors)
