@@ -96,6 +96,7 @@ impl TodoRepository for PgTodoRepository {
         let connection = &mut establish_connection();
 
         let result = diesel::update(todos)
+            .filter(id.eq(todo.id))
             .set(todo)
             .get_result(connection);
 
