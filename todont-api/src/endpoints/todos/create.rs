@@ -11,10 +11,9 @@ pub async fn create_todo(
     Json(body): Json<CreateTodoRequest>) -> impl IntoResponse {
     let todo = Todo::from_create(body);
     let mut repo = repo_mutex.lock().await;
-    if let Some(created) = repo.create(&todo).await {
-        return (StatusCode::OK, axum::Json(created.into_response())).into_response();
-    }
-    else {
-        return StatusCode::BAD_REQUEST.into_response();
+    match repo.create(&todo).await {
+        Ok(created) =>
+            (StatusCode::OK, axum::Json(created.into_response())).into_response(),
+        Err(e) => e.into_response()
     }
 }

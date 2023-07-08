@@ -7,19 +7,19 @@ use uuid::Uuid;
 
 use axum::async_trait;
 
-use diesel::pg::PgConnection;
+use diesel::{pg::PgConnection, result::Error::DatabaseError, result::DatabaseErrorKind};
 use diesel::prelude::*;
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
 use dotenvy::dotenv;
 
-use crate::models::Todo;
+use crate::models::{Todo, ApplicationError};
 
 pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
 
 #[async_trait]
 pub trait TodoRepository {
-    async fn create(&mut self, todo: &Todo) -> Option<Todo>;
+    async fn create(&mut self, todo: &Todo) -> Result<Todo, ApplicationError>;
     async fn get(&self, id: Uuid) -> Option<Todo>;
     async fn get_all(&self) -> Vec<Todo>;
     async fn update(&mut self, todo: &Todo) -> Option<Todo>;
@@ -53,16 +53,29 @@ fn establish_connection() -> PgConnection {
 
 #[async_trait]
 impl TodoRepository for PgTodoRepository {
-    async fn create(&mut self, todo: &Todo) -> Option<Todo> {
+    async fn create(&mut self, todo: &Todo) -> Result<Todo, ApplicationError> {
         use crate::schema::todos::dsl::*;
 
         let connection = &mut establish_connection();
 
-        Some(diesel::insert_into(todos)
+        let result = diesel::insert_into(todos)
             .values(todo)
             .returning(Todo::as_returning())
-            .get_result(connection)
-            .expect("Error inserting new todo"))
+            .get_result(connection);
+
+        if let Ok(t) = result { 
+            return Ok(t);
+        }
+
+        if let Err(DatabaseError(DatabaseErrorKind::UniqueViolation, _)) = result {
+            return Err(
+                ApplicationError::ValidationFailed(
+                    vec![format!("Todo with id {} already exists", todo.id)]
+                    )
+                )
+        } else {
+            return Err(ApplicationError::Unhandled)
+        }
     }
 
     async fn get(&self, todo_id: Uuid) -> Option<Todo> {

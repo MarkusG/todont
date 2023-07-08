@@ -3,6 +3,8 @@ use chrono::NaiveDateTime;
 use chrono::{DateTime, Utc};
 use serde::{Serialize, Deserialize};
 use diesel::{Queryable, Selectable, Insertable, AsChangeset};
+use axum::http::StatusCode;
+use axum::response::{Response, IntoResponse};
 
 #[derive(Clone, Queryable, Selectable, Insertable, AsChangeset)]
 #[diesel(table_name = crate::schema::todos)]
@@ -70,6 +72,44 @@ pub struct TodoResponse {
     pub content: String,
     pub created_at: DateTime<Utc>,
     pub completed_at: Option<DateTime<Utc>>
+}
+
+#[derive(Serialize)]
+pub struct ErrorResponse {
+    pub message: String
+}
+
+#[derive(Serialize)]
+pub struct ValidationErrorResponse {
+    pub messages: Vec<String>
+}
+
+pub enum ApplicationError {
+    TodoNotFound(Uuid),
+    ValidationFailed(Vec<String>),
+    Unhandled
+}
+
+impl IntoResponse for ApplicationError {
+    fn into_response(self) -> Response {
+        use crate::models::ApplicationError::*;
+        match self {
+            TodoNotFound(id) =>
+                (StatusCode::NOT_FOUND,
+                 axum::Json(ErrorResponse { 
+                     message: format!("Could not find todo with id {}", id)
+                 }))
+                .into_response(),
+            ValidationFailed(messages) =>
+                (StatusCode::BAD_REQUEST,
+                 axum::Json(ValidationErrorResponse {
+                     messages
+                 }))
+                .into_response(),
+            Unhandled =>
+                StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
+    }
 }
 
 #[derive(Deserialize)]
