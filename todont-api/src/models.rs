@@ -38,16 +38,23 @@ impl Todo {
         }
     }
 
-    pub fn into_response(self) -> TodoResponse {
+    pub fn into_response_struct(self) -> TodoResponse {
         TodoResponse {
-            id: self.id,
-            title: self.title,
-            content: self.content,
-            created_at: DateTime::<Utc>::from_utc(self.created_at, Utc),
-            completed_at: if let Some(ts) = self.completed_at {
-                Some(DateTime::<Utc>::from_utc(ts, Utc))
-            } else { None }
+             id: self.id,
+             title: self.title,
+             content: self.content,
+             created_at: DateTime::<Utc>::from_utc(self.created_at, Utc),
+             completed_at: if let Some(ts) = self.completed_at {
+                 Some(DateTime::<Utc>::from_utc(ts, Utc))
+             } else { None }
         }
+    }
+}
+
+impl IntoResponse for Todo {
+    fn into_response(self) -> Response {
+        (StatusCode::OK,
+         axum::Json(self.into_response_struct())).into_response()
     }
 }
 
@@ -111,6 +118,15 @@ impl IntoResponse for ApplicationError {
         }
     }
 }
+
+// impl IntoResponse for Result<Todo, ApplicationError> {
+//     fn into_response(self) -> Response {
+//         match self {
+//             Ok(t) => t.into_response(),
+//             Err(e) => e.into_response()
+//         }
+//     }
+// }
 
 #[derive(Deserialize)]
 pub struct AuthenticateRequest {

@@ -20,9 +20,9 @@ pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
 #[async_trait]
 pub trait TodoRepository {
     async fn create(&mut self, todo: &Todo) -> Result<Todo, ApplicationError>;
-    async fn get(&self, id: Uuid) -> Option<Todo>;
+    async fn get(&self, id: Uuid) -> Result<Todo, ApplicationError>;
     async fn get_all(&self) -> Vec<Todo>;
-    async fn update(&mut self, todo: &Todo) -> Option<Todo>;
+    async fn update(&mut self, todo: &Todo) -> Result<Todo, ApplicationError>;
     async fn delete(&mut self, id: Uuid) -> bool;
 }
 
@@ -73,12 +73,12 @@ impl TodoRepository for PgTodoRepository {
                     vec![format!("Todo with id {} already exists", todo.id)]
                     )
                 )
-        } else {
-            return Err(ApplicationError::Unhandled)
         }
+
+        return Err(ApplicationError::Unhandled)
     }
 
-    async fn get(&self, todo_id: Uuid) -> Option<Todo> {
+    async fn get(&self, todo_id: Uuid) -> Result<Todo, ApplicationError> {
         use crate::schema::todos::dsl::*;
 
         let connection = &mut establish_connection();
@@ -87,11 +87,15 @@ impl TodoRepository for PgTodoRepository {
             .select(Todo::as_select())
             .first(connection);
 
-        if let Err(diesel::NotFound) = result {
-            None
-        } else {
-            Some(result.expect("Error getting todo"))
+        if let Ok(t) = result {
+            return Ok(t);
         }
+
+        if let Err(diesel::NotFound) = result {
+            return Err(ApplicationError::TodoNotFound(todo_id))
+        }
+
+        return Err(ApplicationError::Unhandled)
     }
 
     async fn get_all(&self) -> Vec<Todo> {
@@ -103,7 +107,7 @@ impl TodoRepository for PgTodoRepository {
             .expect("Error getting todos")
     }
 
-    async fn update(&mut self, todo: &Todo) -> Option<Todo> {
+    async fn update(&mut self, todo: &Todo) -> Result<Todo, ApplicationError> {
         use crate::schema::todos::dsl::*;
 
         let connection = &mut establish_connection();
@@ -114,10 +118,14 @@ impl TodoRepository for PgTodoRepository {
             .get_result(connection);
 
         if let Ok(t) = result {
-            Some(t)
-        } else {
-            None
+            return Ok(t);
         }
+
+        if let Err(diesel::NotFound) = result {
+            return Err(ApplicationError::TodoNotFound(todo.id))
+        }
+
+        return Err(ApplicationError::Unhandled);
     }
 
     async fn delete(&mut self, todo_id: Uuid) -> bool {

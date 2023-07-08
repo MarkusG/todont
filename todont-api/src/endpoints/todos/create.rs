@@ -1,6 +1,5 @@
 use axum::Json;
 use axum::Extension;
-use axum::http::StatusCode;
 use axum::response::IntoResponse;
 
 use crate::models::{Todo, CreateTodoRequest};
@@ -11,9 +10,5 @@ pub async fn create_todo(
     Json(body): Json<CreateTodoRequest>) -> impl IntoResponse {
     let todo = Todo::from_create(body);
     let mut repo = repo_mutex.lock().await;
-    match repo.create(&todo).await {
-        Ok(created) =>
-            (StatusCode::OK, axum::Json(created.into_response())).into_response(),
-        Err(e) => e.into_response()
-    }
+    repo.create(&todo).await.into_response()
 }

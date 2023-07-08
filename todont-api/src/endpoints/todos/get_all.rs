@@ -10,6 +10,6 @@ pub async fn get_todos(
         repo.get_all().await
             .to_vec()
             .into_iter()
-            .map(|t| t.into_response()).collect::<Vec<_>>()
+            .map(|t| t.into_response_struct()).collect::<Vec<_>>()
     )
 }
