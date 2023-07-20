@@ -1,7 +1,8 @@
 use std::collections::BTreeMap;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 use hmac::{Hmac, Mac};
-use jwt::SignWithKey;
+use jwt::{Claims, RegisteredClaims, SignWithKey, VerifyWithKey};
 use sha2::Sha256;
 
 use axum::http::StatusCode;
@@ -15,7 +16,6 @@ use axum::extract::FromRequestParts;
 use axum::TypedHeader;
 use axum::headers::Authorization;
 use axum::headers::authorization::Bearer;
-use jwt::VerifyWithKey;
 
 use crate::models::AuthenticateRequest;
 
@@ -30,8 +30,27 @@ pub async fn authenticate(Json(body): Json<AuthenticateRequest>) -> impl IntoRes
 
     let key: Hmac<Sha256> = Hmac::new_from_slice(b"1234").unwrap();
 
-    let mut claims = BTreeMap::new();
-    claims.insert("username", "mark");
+    let mut private = BTreeMap::new();
+    private.insert("username".to_string(), "mark".into());
+
+    let now = SystemTime::now();
+    let unix_ts = now
+        .duration_since(UNIX_EPOCH)
+        .expect("Clara, get the TARDIS")
+        .as_secs();
+
+    let claims = Claims {
+        registered: RegisteredClaims {
+            issuer: None,
+            subject: None,
+            audience: None,
+            expiration: Some(unix_ts + 10),
+            not_before: Some(unix_ts),
+            issued_at: Some(unix_ts),
+            json_web_token_id: None
+        },
+        private
+    };
 
     let token = claims.sign_with_key(&key).unwrap();
 
@@ -52,14 +71,14 @@ impl<S> FromRequestParts<S> for MyClaims
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
-            .map_err(|_| AuthError::InvalidToken)?;
+            .map_err(|e| { println!("{:?}", e); AuthError::InvalidToken })?;
 
         let key: Hmac<Sha256> = Hmac::new_from_slice(b"1234").unwrap();
-        let claims: BTreeMap<String, String> = bearer.token()
+        let claims: Claims = bearer.token()
             .verify_with_key(&key)
-            .map_err(|_| AuthError::InvalidToken)?;
+            .map_err(|e| { println!("{:?}", e); AuthError::InvalidToken })?;
 
-        Ok(MyClaims { username: claims["username"].clone() })
+        Ok(MyClaims { username: claims.private["username"].to_string() })
     }
 }
 
