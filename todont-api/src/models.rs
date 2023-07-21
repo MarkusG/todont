@@ -124,3 +124,12 @@ pub struct AuthenticateRequest {
     pub username: String,
     pub password: String
 }
+
+pub mod permissions {
+    pub type Permissions = u64;
+
+    pub const CREATE_TODO: u64 = 0x01;
+    pub const READ_TODOS: u64 = 0x02;
+    pub const UPDATE_TODO: u64 = 0x04;
+    pub const DELETE_TODO: u64 = 0x08;
+}

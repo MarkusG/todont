@@ -18,6 +18,7 @@ use axum::headers::Authorization;
 use axum::headers::authorization::Bearer;
 
 use crate::models::AuthenticateRequest;
+use crate::models::permissions::*;
 
 pub async fn authenticate(Json(body): Json<AuthenticateRequest>) -> impl IntoResponse {
     if body.username.is_empty() || body.password.is_empty() {
@@ -32,6 +33,9 @@ pub async fn authenticate(Json(body): Json<AuthenticateRequest>) -> impl IntoRes
 
     let mut private = BTreeMap::new();
     private.insert("username".to_string(), "mark".into());
+
+    let permissions: Permissions = CREATE_TODO | READ_TODOS | UPDATE_TODO | DELETE_TODO;
+    private.insert("permissions".to_string(), permissions.into());
 
     let now = SystemTime::now();
     let unix_ts = now
@@ -58,7 +62,8 @@ pub async fn authenticate(Json(body): Json<AuthenticateRequest>) -> impl IntoRes
 }
 
 pub async fn authorized(claims: MyClaims) -> impl IntoResponse {
-    println!("{}", claims.username);
+    println!("username: {}", claims.username);
+    println!("permissions: {}", claims.permissions);
 }
 
 #[async_trait]
@@ -78,12 +83,17 @@ impl<S> FromRequestParts<S> for MyClaims
             .verify_with_key(&key)
             .map_err(|e| { println!("{:?}", e); AuthError::InvalidToken })?;
 
-        Ok(MyClaims { username: claims.private["username"].to_string() })
+        Ok(MyClaims {
+            username: claims.private["username"]
+                .as_str().expect("username was not a string").to_string(),
+            permissions: claims.private["permissions"]
+                .as_u64().expect("permissions was not a u64") })
     }
 }
 
 pub struct MyClaims {
-    username: String
+    username: String,
+    permissions: Permissions
 }
 
 pub enum AuthError {
