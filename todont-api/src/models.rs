@@ -119,15 +119,6 @@ impl IntoResponse for ApplicationError {
     }
 }
 
-// impl IntoResponse for Result<Todo, ApplicationError> {
-//     fn into_response(self) -> Response {
-//         match self {
-//             Ok(t) => t.into_response(),
-//             Err(e) => e.into_response()
-//         }
-//     }
-// }
-
 #[derive(Deserialize)]
 pub struct AuthenticateRequest {
     pub username: String,
