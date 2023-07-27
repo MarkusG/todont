@@ -26,9 +26,7 @@ pub trait TodoRepository {
     async fn delete(&mut self, id: Uuid) -> bool;
 }
 
-pub struct PgTodoRepository {
-    
-}
+pub struct PgTodoRepository;
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("./migrations");
 
