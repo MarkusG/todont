@@ -1,22 +1,8 @@
-use std::collections::BTreeMap;
-use std::time::{SystemTime, UNIX_EPOCH};
-
-use hmac::{Hmac, Mac};
-use jwt::{Claims, RegisteredClaims, SignWithKey, VerifyWithKey};
-use sha2::Sha256;
-
 use axum::http::StatusCode;
-use axum::{Json, RequestPartsExt};
+use axum::Json;
 use axum::response::IntoResponse;
 
-use axum::response::Response;
-use axum::async_trait;
-use axum::http::request::Parts;
-use axum::extract::FromRequestParts;
-use axum::TypedHeader;
-use axum::headers::Authorization;
-use axum::headers::authorization::Bearer;
-
+use crate::auth::{generate_token, ApplicationClaims};
 use crate::models::AuthenticateRequest;
 use crate::models::permissions::*;
 
@@ -29,79 +15,15 @@ pub async fn authenticate(Json(body): Json<AuthenticateRequest>) -> impl IntoRes
         return StatusCode::UNAUTHORIZED.into_response();
     }
 
-    let key: Hmac<Sha256> = Hmac::new_from_slice(b"1234").unwrap();
-
-    let mut private = BTreeMap::new();
-    private.insert("username".to_string(), "mark".into());
-
-    let permissions: Permissions = CREATE_TODO | READ_TODOS | UPDATE_TODO | DELETE_TODO;
-    private.insert("permissions".to_string(), permissions.into());
-
-    let now = SystemTime::now();
-    let unix_ts = now
-        .duration_since(UNIX_EPOCH)
-        .expect("Clara, get the TARDIS")
-        .as_secs();
-
-    let claims = Claims {
-        registered: RegisteredClaims {
-            issuer: None,
-            subject: None,
-            audience: None,
-            expiration: Some(unix_ts + 10),
-            not_before: Some(unix_ts),
-            issued_at: Some(unix_ts),
-            json_web_token_id: None
-        },
-        private
-    };
-
-    let token = claims.sign_with_key(&key).unwrap();
+    let token = generate_token(ApplicationClaims {
+        username: "mark".to_string(),
+        permissions: CREATE_TODO | UPDATE_TODO | READ_TODOS | DELETE_TODO
+    });
 
     (StatusCode::OK, token).into_response()
 }
 
-pub async fn authorized(claims: MyClaims) -> impl IntoResponse {
+pub async fn authorized(claims: ApplicationClaims) -> impl IntoResponse {
     println!("username: {}", claims.username);
     println!("permissions: {}", claims.permissions);
-}
-
-#[async_trait]
-impl<S> FromRequestParts<S> for MyClaims
-    where S: Send + Sync
-{
-    type Rejection = AuthError;
-
-    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        let TypedHeader(Authorization(bearer)) = parts
-            .extract::<TypedHeader<Authorization<Bearer>>>()
-            .await
-            .map_err(|e| { println!("{:?}", e); AuthError::InvalidToken })?;
-
-        let key: Hmac<Sha256> = Hmac::new_from_slice(b"1234").unwrap();
-        let claims: Claims = bearer.token()
-            .verify_with_key(&key)
-            .map_err(|e| { println!("{:?}", e); AuthError::InvalidToken })?;
-
-        Ok(MyClaims {
-            username: claims.private["username"]
-                .as_str().expect("username was not a string").to_string(),
-            permissions: claims.private["permissions"]
-                .as_i64().expect("permissions was not a i64") })
-    }
-}
-
-pub struct MyClaims {
-    username: String,
-    permissions: Permissions
-}
-
-pub enum AuthError {
-    InvalidToken
-}
-
-impl IntoResponse for AuthError {
-    fn into_response(self) -> Response {
-        (StatusCode::UNAUTHORIZED, "Invalid token").into_response()
-    }
 }
