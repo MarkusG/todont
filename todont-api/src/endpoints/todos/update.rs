@@ -11,7 +11,7 @@ pub async fn update_todo(
     Extension(repo_mutex): Extension<DynTodoRepository>,
     Path(id): Path<Uuid>,
     Json(body): Json<UpdateTodoRequest>) -> impl IntoResponse {
-    let todo = Todo::from_update(body, id);
+    let todo = Todo::from_update(body, id, "mark".to_string());
     let mut repo = repo_mutex.lock().await;
     repo.update(&todo).await.into_response()
 }

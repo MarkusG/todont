@@ -75,6 +75,8 @@ impl TodoRepository for PgTodoRepository {
                 )
         }
 
+        eprintln!("{}", result.err().unwrap());
+
         return Err(ApplicationError::Unhandled)
     }
 

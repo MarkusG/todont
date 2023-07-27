@@ -87,7 +87,7 @@ impl<S> FromRequestParts<S> for MyClaims
             username: claims.private["username"]
                 .as_str().expect("username was not a string").to_string(),
             permissions: claims.private["permissions"]
-                .as_u64().expect("permissions was not a u64") })
+                .as_i64().expect("permissions was not a i64") })
     }
 }
 

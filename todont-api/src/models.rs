@@ -14,27 +14,53 @@ pub struct Todo {
     pub title: String,
     pub content: String,
     pub created_at: NaiveDateTime,
-    pub completed_at: Option<NaiveDateTime>
+    pub completed_at: Option<NaiveDateTime>,
+    pub username: String
+}
+
+#[derive(Clone, Queryable, Selectable, Insertable, AsChangeset)]
+#[diesel(table_name = crate::schema::users)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct User {
+    pub username: String,
+    pub password_sha512: Vec<u8>
+}
+
+#[derive(Clone, Queryable, Selectable, Insertable, AsChangeset)]
+#[diesel(table_name = crate::schema::roles)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Role {
+    pub name: String
+}
+
+#[derive(Clone, Queryable, Selectable, Insertable, AsChangeset)]
+#[diesel(table_name = crate::schema::permissions)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Permission {
+    pub name: String,
+    pub flag: i64
 }
 
 impl Todo {
-    pub fn from_create(request: CreateTodoRequest) -> Todo {
+    pub fn from_create(request: CreateTodoRequest, username: String) -> Todo {
         Todo {
             id: Uuid::new_v4(),
             created_at: chrono::Utc::now().naive_utc(),
             completed_at: None,
             title: request.title,
-            content: request.content
+            content: request.content,
+            username
         }
     }
 
-    pub fn from_update(request: UpdateTodoRequest, id: Uuid) -> Todo {
+    pub fn from_update(request: UpdateTodoRequest, id: Uuid, username: String) -> Todo {
         Todo {
             id,
             created_at: request.created_at.naive_utc(),
             completed_at: if let Some(ts) = request.completed_at { Some(ts.naive_utc()) } else { None },
             title: request.title,
-            content: request.content
+            content: request.content,
+            username
         }
     }
 
@@ -126,10 +152,10 @@ pub struct AuthenticateRequest {
 }
 
 pub mod permissions {
-    pub type Permissions = u64;
+    pub type Permissions = i64;
 
-    pub const CREATE_TODO: u64 = 0x01;
-    pub const READ_TODOS: u64 = 0x02;
-    pub const UPDATE_TODO: u64 = 0x04;
-    pub const DELETE_TODO: u64 = 0x08;
+    pub const CREATE_TODO: i64 = 0x01;
+    pub const READ_TODOS: i64 = 0x02;
+    pub const UPDATE_TODO: i64 = 0x04;
+    pub const DELETE_TODO: i64 = 0x08;
 }
