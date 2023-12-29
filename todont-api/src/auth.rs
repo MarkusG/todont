@@ -15,9 +15,11 @@ use axum::{
     RequestPartsExt
 };
 
+use crate::models::permissions::Permissions;
+
 pub struct ApplicationClaims {
     pub username: String,
-    pub permissions: i64
+    pub permissions: Permissions
 }
 
 #[async_trait]
