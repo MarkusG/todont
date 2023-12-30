@@ -1,7 +1,7 @@
-export function setToken(token: string) {
+export function setToken(token: string) : void {
     sessionStorage.setItem('token', token);
 }
 
-export function getToken() {
+export function getToken() : string | null {
     return sessionStorage.getItem('token');
 }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import InputText from './Forms/InputText.tsx';
 import InputTextArea from './Forms/InputTextArea.tsx';
+import { getToken } from './auth.tsx';
 
 interface ValidationState<T> {
     value: T;
@@ -18,7 +19,8 @@ export default function CreateTodo() {
         fetch(`http://localhost:3001/todos`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify({ title: title.value, content: content.value })
         }).then((response) => {
