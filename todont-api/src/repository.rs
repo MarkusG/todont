@@ -21,7 +21,7 @@ pub type DynTodoRepository = Arc<Mutex<dyn TodoRepository + Send + Sync>>;
 pub trait TodoRepository {
     async fn create(&mut self, todo: &Todo) -> Result<Todo, ApplicationError>;
     async fn get(&self, id: Uuid) -> Result<Todo, ApplicationError>;
-    async fn get_all(&self) -> Vec<Todo>;
+    async fn get_all(&self, username: String) -> Vec<Todo>;
     async fn update(&mut self, todo: &Todo) -> Result<Todo, ApplicationError>;
     async fn delete(&mut self, id: Uuid) -> bool;
 }
@@ -98,12 +98,14 @@ impl TodoRepository for PgTodoRepository {
         return Err(ApplicationError::Unhandled)
     }
 
-    async fn get_all(&self) -> Vec<Todo> {
+    async fn get_all(&self, user: String) -> Vec<Todo> {
         use crate::schema::todos::dsl::*;
 
         let connection = &mut establish_connection();
 
-        todos.get_results(connection)
+        todos
+            .filter(username.eq(user))
+            .get_results(connection)
             .expect("Error getting todos")
     }
 

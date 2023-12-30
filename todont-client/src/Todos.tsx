@@ -12,7 +12,11 @@ export default function Todos() {
     const { isLoading, error, data } = useQuery<Todo[], Error>({
         queryKey: ['todos'],
         queryFn: () =>
-            fetch('http://localhost:3001/todos')
+            fetch('http://localhost:3001/todos', {
+                headers: {
+                    "Authorization": `Bearer ${getToken()}`
+                }
+            })
             .then((res) => res.json()),
         initialData: []
     });
