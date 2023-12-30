@@ -4,6 +4,7 @@ import TodoDisplay from './TodoDisplay.tsx';
 import CreateTodoButton from './CreateTodoButton.tsx';
 
 import Todo from './Todo.ts';
+import { getToken } from './auth.tsx';
 
 export default function Todos() {
     const queryClient = useQueryClient();
@@ -36,6 +37,9 @@ export default function Todos() {
         mutationFn: async (id: string) => { 
             await fetch(`http://localhost:3001/todos/${id}`, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${getToken()}`
+                }
             })
         },
         onSuccess: () => {
