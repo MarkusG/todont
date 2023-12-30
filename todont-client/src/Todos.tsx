@@ -76,6 +76,7 @@ export default function Todos() {
         {doneTodos.length > 0 &&
             <h3 className="text-3xl my-4 text-center">Completed Todos</h3>
         }
+        <div className={`flex flex-col gap-2 ${doneTodos.length > 0 ? 'mb-4' : ''}`}>
             {doneTodos.map((t) => (
                 <div key={t.id}>
                 <TodoDisplay
@@ -83,6 +84,7 @@ export default function Todos() {
                   onDelete={(id) => { deleteMutation.mutate(id) }}/>
                 </div>
             ))}
+        </div>
         </>
     );
 }
