@@ -117,6 +117,7 @@ pub struct ValidationErrorResponse {
     pub messages: Vec<String>
 }
 
+#[derive(Debug)]
 pub enum ApplicationError {
     TodoNotFound(Uuid),
     ValidationFailed(Vec<String>),

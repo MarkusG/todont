@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import Todo from './Todo.ts';
+import { getToken } from './auth.tsx';
 
 export default function CreateTodo() {
     const { id } = useParams();
@@ -25,7 +26,8 @@ export default function CreateTodo() {
         fetch(`http://localhost:3001/todos/${id}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${getToken()}`
             },
             body: JSON.stringify(todo)
         }).then((response) => {
