@@ -54,7 +54,7 @@ export default function Todos() {
         <div className="mb-4">
             <CreateTodoButton/>
         </div>
-        <div className={`flex flex-col gap-4${doneTodos.length > 0 ? 'mb-4' : ''}`}>
+        <div className={`flex flex-col gap-2 ${doneTodos.length > 0 ? 'mb-4' : ''}`}>
           {data.filter(t => { return t.completed_at === null}).map((t) => (
               <div key={t.id}>
               <TodoDisplay
