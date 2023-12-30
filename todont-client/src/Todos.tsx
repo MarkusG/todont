@@ -27,7 +27,8 @@ export default function Todos() {
             await fetch(`http://localhost:3001/todos/${todo.id}`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${getToken()}`
                 },
                 body: JSON.stringify({...todo, completed_at: new Date() })
             }).then((res) => res.json())
