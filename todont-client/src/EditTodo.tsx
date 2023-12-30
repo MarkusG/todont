@@ -10,15 +10,18 @@ export default function CreateTodo() {
     const navigate = useNavigate();
 
     useEffect(() => {
-      fetch(`http://localhost:3001/todos/${id}`)
-        .then((response) => {
+      fetch(`http://localhost:3001/todos/${id}`, {
+          headers: {
+                "Authorization": `Bearer ${getToken()}`
+          }
+      }).then((response) => {
             if (response.ok)
                 return response.json();
-        })
-        .then((todo) => { setTodo(todo); })
-        .catch((e) => {
+      })
+      .then((todo) => { setTodo(todo); })
+      .catch((e) => {
             console.log(e.message);
-        });
+      });
     }, [id]);
 
     function submit() {
